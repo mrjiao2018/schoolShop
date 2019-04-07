@@ -9,7 +9,7 @@ public class Area {
     //id，使用引用类型时为了防止类加载的时候默认初始化，比如 Int 会初始化为0，现在希望空就是空
     private Integer areaId;
     //名称
-    private String name;
+    private String areaName;
     //权重
     private Integer priority;
     //创建时间
@@ -26,11 +26,11 @@ public class Area {
     }
 
     public String getName() {
-        return name;
+        return areaName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String areaName) {
+        this.areaName = areaName;
     }
 
     public Integer getPriority() {
