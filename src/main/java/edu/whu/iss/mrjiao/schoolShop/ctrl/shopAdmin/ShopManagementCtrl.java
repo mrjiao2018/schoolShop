@@ -1,8 +1,13 @@
 package edu.whu.iss.mrjiao.schoolShop.ctrl.shopAdmin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.whu.iss.mrjiao.schoolShop.dto.ShopExecution;
+import edu.whu.iss.mrjiao.schoolShop.enums.ShopStateEnum;
+import edu.whu.iss.mrjiao.schoolShop.service.ShopService;
 import edu.whu.iss.mrjiao.schoolShop.utils.HttpServletRequestUtil;
+import edu.whu.iss.mrjiao.schoolShop.vo.PersonInfo;
 import edu.whu.iss.mrjiao.schoolShop.vo.Shop;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,12 +18,18 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * shop相关操作的控制器
+ */
 @Controller
 @RequestMapping("/shopadmin")
 public class ShopManagementCtrl {
+    @Autowired
+    private ShopService shopService;
 
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
     @ResponseBody
@@ -50,14 +61,28 @@ public class ShopManagementCtrl {
 
         //2. 注册店铺
         if(shop != null && shopImg != null){
-
+            PersonInfo owner = new PersonInfo();
+            //todo 从session中获取创建者的id
+            owner.setUserId(1l);
+            shop.setOwner(owner);
+            ShopExecution se = null;
+            try {
+                se = shopService.addShop(shop, shopImg.getInputStream(), shopImg.getOriginalFilename());
+                if(se.getState() == ShopStateEnum.CHECK.getState()){
+                    modelMap.put("success", true);
+                } else {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", se.getStateInfo());
+                }
+            } catch (IOException e) {
+                modelMap.put("success", false);
+                modelMap.put("errMsg", e.getMessage());
+            }
+            return modelMap;
         } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "请输入店铺信息");
             return modelMap;
         }
-
-        //3. 返回结果
-        return modelMap;
     }
 }

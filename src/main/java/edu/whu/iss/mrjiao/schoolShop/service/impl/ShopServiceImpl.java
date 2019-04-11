@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
 
 @Service
@@ -28,12 +29,12 @@ public class ShopServiceImpl implements ShopService {
      * 3.
      * 4.
      * @param shop
-     * @param shopImg
+     * @param shopImginputStream
      * @return
      */
     @Override
     @Transactional
-    public ShopExecution addShop(Shop shop, CommonsMultipartFile shopImg) {
+    public ShopExecution addShop(Shop shop, InputStream shopImginputStream, String fileName) {
         //特殊情况判断
         if(shop == null)
             return new ShopExecution(ShopStateEnum.NULL_SHOP_INFO);
@@ -48,10 +49,10 @@ public class ShopServiceImpl implements ShopService {
             if(effectedNum <= 0){
                 throw new RuntimeException("店铺创建失败");
             } else {
-                if(shopImg != null){
+                if(shopImginputStream != null){
                     //存储图片
                     try {
-                        addShopImg(shop, shopImg);
+                        addShopImg(shop, shopImginputStream, fileName);
                     }catch (Exception e){
                         throw new RuntimeException("addShopImg error:" + e.getMessage());
                     }
@@ -70,10 +71,10 @@ public class ShopServiceImpl implements ShopService {
         return new ShopExecution(ShopStateEnum.CHECK, shop);
     }
 
-    private void addShopImg(Shop shop, CommonsMultipartFile shopImg) {
+    private void addShopImg(Shop shop, InputStream shopImgInputStream, String fileName) {
         //获取shop图片目录的相对值路径
         String destination = PathUtil.getShopImagePath(shop.getShopId());
-        String shopImgAddr = ImageUtil.generateThumbnail(shopImg, destination);
+        String shopImgAddr = ImageUtil.generateThumbnail(shopImgInputStream, fileName, destination);
         shop.setShopImg(shopImgAddr);
     }
 }
