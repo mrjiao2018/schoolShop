@@ -14,7 +14,8 @@ public class PathUtil {
         if(os.toLowerCase() == "win"){
             basePath = "D:/schoolShop/image/";
         } else{
-            basePath = "/home/schoolShop/image/";
+            //basePath = "/home/projects/schoolShop/image/";
+            basePath = "/Users/mrjiao/IdeaProjects/schoolShopImg/";
         }
         basePath = basePath.replace("/", separator);
         return basePath;

@@ -29,9 +29,9 @@ public class ShopServiceTest extends BaseTest {
         PersonInfo owner = new PersonInfo();
         Area area = new Area();
         ShopCategory shopCategory = new ShopCategory();
-        owner.setUserId(2018l);
-        area.setAreaId(2018);
-        shopCategory.setShopCategoryId(2018l);
+        owner.setUserId(1l);
+        area.setAreaId(1);
+        shopCategory.setShopCategoryId(1l);
         File shopImg = new File("/Users/mrjiao/IdeaProjects/schoolShop/src/main/resources/tom.jpeg");
         InputStream inputStream = new FileInputStream(shopImg);
 

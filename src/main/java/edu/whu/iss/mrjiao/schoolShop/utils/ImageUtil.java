@@ -5,6 +5,7 @@ import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,9 +38,12 @@ public class ImageUtil {
         String absoluteAddr = PathUtil.getImageBasePath() + relativeAddr;
         File destination = new File(absoluteAddr);
         try {
+            //todo basePath问题？通过basePath无法正确加载水印图片
+            //File waterMark = new File(basePath + "/watermark.jpeg");
+            File waterMark = new File("/Users/mrjiao/IdeaProjects/schoolShop/src/main/resources/watermark.jpeg");
+            BufferedImage bufferedImage = ImageIO.read(waterMark);
             Thumbnails.of(thumbnailInputStream).size(200, 200)
-                    .watermark(Positions.BOTTOM_RIGHT,
-                            ImageIO.read(new File(basePath + "/watermark.jpeg")), 0.25f)
+                    .watermark(Positions.BOTTOM_RIGHT, bufferedImage, 0.25f)
                     .outputQuality(0.8f).toFile(destination);
         } catch (IOException e){
             throw new RuntimeException("创建缩略图失败：" + e.toString());

@@ -71,6 +71,12 @@ public class ShopServiceImpl implements ShopService {
         return new ShopExecution(ShopStateEnum.CHECK, shop);
     }
 
+    /**
+     * 将用户上传的店铺图片加上水印后存储在本地，并初始化shop对象中的shop_img属性值
+     * @param shop
+     * @param shopImgInputStream
+     * @param fileName
+     */
     private void addShopImg(Shop shop, InputStream shopImgInputStream, String fileName) {
         //获取shop图片目录的相对值路径
         String destination = PathUtil.getShopImagePath(shop.getShopId());
