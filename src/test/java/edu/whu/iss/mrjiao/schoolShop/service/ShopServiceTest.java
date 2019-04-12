@@ -40,12 +40,13 @@ public class ShopServiceTest extends BaseTest {
         shop.setArea(area);
         shop.setShopCategory(shopCategory);
         shop.setShopName("testAddShop");
-        shop.setShopDesc("test");
-        shop.setShopAddr("test");
-        shop.setPhone("test");
+        shop.setShopDesc("testDesc");
+        shop.setShopAddr("testAddr");
+        shop.setPhone("testPhone");
+        shop.setPriority(1);
         shop.setCreateTime(new Date());
         shop.setEnableStatus(ShopStateEnum.CHECK.getState());
-        shop.setAdvice("test");
+        shop.setAdvice("testAdvice");
 
         //CommonsMultipartFile imgFile = new CommonsMultipartFile();
         ShopExecution shopExecution = shopService.addShop(shop, inputStream, shopImg.getName());
