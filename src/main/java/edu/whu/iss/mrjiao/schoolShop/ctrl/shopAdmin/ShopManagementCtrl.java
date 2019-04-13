@@ -6,6 +6,7 @@ import edu.whu.iss.mrjiao.schoolShop.enums.ShopStateEnum;
 import edu.whu.iss.mrjiao.schoolShop.service.AreaService;
 import edu.whu.iss.mrjiao.schoolShop.service.ShopCategoryService;
 import edu.whu.iss.mrjiao.schoolShop.service.ShopService;
+import edu.whu.iss.mrjiao.schoolShop.utils.CodeUtil;
 import edu.whu.iss.mrjiao.schoolShop.utils.HttpServletRequestUtil;
 import edu.whu.iss.mrjiao.schoolShop.vo.Area;
 import edu.whu.iss.mrjiao.schoolShop.vo.PersonInfo;
@@ -68,6 +69,11 @@ public class ShopManagementCtrl {
     @ResponseBody
     private Map<String, Object> registerShop(HttpServletRequest request){
         Map<String, Object> modelMap = new HashMap<>();
+        if (!CodeUtil.checkVerifyCode(request)){
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "输入了错误的验证码");
+            return modelMap;
+        }
 
         //1. 接收并转化相应的参数，包括店铺信息和图片信息
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");

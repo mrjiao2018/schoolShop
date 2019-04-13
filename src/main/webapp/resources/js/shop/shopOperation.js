@@ -7,7 +7,6 @@
 $(function () {
     var initUrl = "/schoolshop/shopadmin/getshopinitinfo";
     var registerShopUrl = "/schoolshop/shopadmin/registershop";
-    alert(initUrl);
     getShopInitInfo();
     
     function getShopInitInfo() {
@@ -31,6 +30,7 @@ $(function () {
     }
 
     $("#submit").click(function () {
+        // 获取用户输入的商店信息
         var shop = {};
         shop.shopName = $("#shop-name").val();
         shop.shopAddr = $("#shop-addr").val();
@@ -47,12 +47,23 @@ $(function () {
             }).data('id')
         };
 
+        // 获取用户上传的图片信息
         var shopImg = $("#shop-img")[0].files[0];
 
+        // 检查验证码
+        var verifyCodeActual = $("#j_captcha").val();
+        if(!verifyCodeActual){
+            $.toast("请输入验证码！");
+            return;
+        }
+
+        // 将信息封装
         var formData = new FormData();
         formData.append('shopImg', shopImg);
         formData.append('shopStr', JSON.stringify(shop));
+        formData.append('verifyCodeActual', verifyCodeActual);
 
+        // 上传
         $.ajax({
             url:registerShopUrl,
             type:"POST",
@@ -66,6 +77,7 @@ $(function () {
                 } else {
                     $.toast("提交失败" + data.errMsg);
                 }
+                $("#captcha_img").click();
             }
         })
     });
