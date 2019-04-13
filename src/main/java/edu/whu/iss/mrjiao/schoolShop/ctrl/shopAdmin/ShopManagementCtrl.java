@@ -3,10 +3,14 @@ package edu.whu.iss.mrjiao.schoolShop.ctrl.shopAdmin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.whu.iss.mrjiao.schoolShop.dto.ShopExecution;
 import edu.whu.iss.mrjiao.schoolShop.enums.ShopStateEnum;
+import edu.whu.iss.mrjiao.schoolShop.service.AreaService;
+import edu.whu.iss.mrjiao.schoolShop.service.ShopCategoryService;
 import edu.whu.iss.mrjiao.schoolShop.service.ShopService;
 import edu.whu.iss.mrjiao.schoolShop.utils.HttpServletRequestUtil;
+import edu.whu.iss.mrjiao.schoolShop.vo.Area;
 import edu.whu.iss.mrjiao.schoolShop.vo.PersonInfo;
 import edu.whu.iss.mrjiao.schoolShop.vo.Shop;
+import edu.whu.iss.mrjiao.schoolShop.vo.ShopCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +23,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +36,33 @@ import java.util.Map;
 public class ShopManagementCtrl {
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private ShopCategoryService shopCategoryService;
+
+    @Autowired
+    private AreaService areaService;
+
+    @RequestMapping(value = "/getshopinitinfo", method = {RequestMethod.GET})
+    @ResponseBody
+    private Map<String, Object> getShopInitInfo(){
+        Map<String, Object> modelMap = new HashMap<>();
+        List<ShopCategory> shopCategoryList = new ArrayList<>();
+        List<Area> areaList = new ArrayList<>();
+
+        try {
+            shopCategoryList = shopCategoryService.getShopCategoryList(new ShopCategory());
+            areaList = areaService.getAreaList();
+            modelMap.put("success", true);
+            modelMap.put("shopCategoryList", shopCategoryList);
+            modelMap.put("areaList", areaList);
+        } catch (Exception e){
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+        }
+
+        return modelMap;
+    }
 
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
     @ResponseBody
