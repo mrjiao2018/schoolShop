@@ -5,9 +5,19 @@
  * 3. 验证表单输入
  */
 $(function () {
+    var shopId = getQueryString("shopId");
+    var isEdit = shopId ? true : false;
     var initUrl = "/schoolshop/shopadmin/getshopinitinfo";
     var registerShopUrl = "/schoolshop/shopadmin/registershop";
-    getShopInitInfo();
+    var shopInfoUrl = "/schoolshop/shopadmin/getshopbyid?shopId="+shopId;
+    var editShopUrl = "/schoolshop/shopadmin/modifyshop";
+
+    if(isEdit){
+        getShopInfo(shopId);
+    } else {
+        getShopInitInfo();
+    }
+
     
     function getShopInitInfo() {
         $.getJSON(initUrl, function (data) {
@@ -29,9 +39,35 @@ $(function () {
         })
     }
 
+    function getShopInfo(shopId) {
+        $.getJSON(shopInfoUrl, function (data) {
+            if(data.success){
+                var shop = data.shop;
+                $("#shop-name").val(shop.shopName);
+                $("#shop-addr").val(shop.shopAddr);
+                $("#shop-phone").val(shop.phone);
+                $("#shop-desc").val(shop.shopDesc);
+                var tempCategoryHtml = '<option data-id="'
+                    + shop.shopCategory.shopCategoryId + '" selected>'
+                    + shop.shopCategory.shopCategoryName + '</option>';
+                var tempAreaHtml = '';
+                data.areaList.map(function (item, index) {
+                    tempAreaHtml += '<option data-id="' + item.areaId + '">'
+                        + item.name + '</option>';
+                });
+                $("#shop-category").html(tempCategoryHtml);
+                $("#shop-category").attr('disabled', 'disabled');
+                $("#area").html(tempAreaHtml);
+                $("#area option[data-id='" + shop.area.areaId + "']").attr('selected', 'selected');
+            }
+        })
+    }
+
     $("#submit").click(function () {
         // 获取用户输入的商店信息
         var shop = {};
+        if(isEdit)
+            shop.shopId = shopId;
         shop.shopName = $("#shop-name").val();
         shop.shopAddr = $("#shop-addr").val();
         shop.phone = $("#shop-phone").val();
@@ -65,7 +101,7 @@ $(function () {
 
         // 上传
         $.ajax({
-            url:registerShopUrl,
+            url:(isEdit ? editShopUrl : registerShopUrl),
             type:"POST",
             data:formData,
             contentType:false,

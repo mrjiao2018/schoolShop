@@ -87,7 +87,7 @@ public class ShopServiceImpl implements ShopService {
             if (shopImgInputStream != null && fileName != null && !"".equals(fileName)){
                 Shop tempShop = shopDao.queryByShopId(shop.getShopId());
                 if (tempShop.getShopImg() != null){
-                    ImageUtil.deleteFileOrPath(shop.getShopImg());
+                    ImageUtil.deleteFileOrPath(tempShop.getShopImg());
                 }
                 addShopImg(shop, shopImgInputStream, fileName);
             }
