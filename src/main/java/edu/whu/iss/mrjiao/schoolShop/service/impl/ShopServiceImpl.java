@@ -71,6 +71,41 @@ public class ShopServiceImpl implements ShopService {
         return new ShopExecution(ShopStateEnum.CHECK, shop);
     }
 
+    @Override
+    public Shop getByShopId(long shopId) {
+        return shopDao.queryByShopId(shopId);
+    }
+
+    @Override
+    @Transactional
+    public ShopExecution modifyShop(Shop shop, InputStream shopImgInputStream, String fileName) {
+        if (shop == null || shop.getShopId() == null)
+            return new ShopExecution(ShopStateEnum.NULL_SHOP_INFO);
+
+        try {
+            //1. 判断是否需要处理图片
+            if (shopImgInputStream != null && fileName != null && !"".equals(fileName)){
+                Shop tempShop = shopDao.queryByShopId(shop.getShopId());
+                if (tempShop.getShopImg() != null){
+                    ImageUtil.deleteFileOrPath(shop.getShopImg());
+                }
+                addShopImg(shop, shopImgInputStream, fileName);
+            }
+            //2. 更新店铺信息
+            shop.setLastEditTime(new Date());
+            int effectedNum = shopDao.updateShop(shop);
+            if (effectedNum <= 0){
+                return new ShopExecution(ShopStateEnum.INNER_ERROR);
+            } else {
+                shop = shopDao.queryByShopId(shop.getShopId());
+                return new ShopExecution(ShopStateEnum.SUCCESS, shop);
+            }
+        } catch (Exception e){
+            throw new RuntimeException("modifyShop error：" + e.getMessage());
+        }
+    }
+
+
     /**
      * 将用户上传的店铺图片加上水印后存储在本地，并初始化shop对象中的shop_img属性值
      * @param shop

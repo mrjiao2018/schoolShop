@@ -52,6 +52,24 @@ public class ImageUtil {
     }
 
     /**
+     * 删除已经存在的文件或者目录
+     * 如果 storePath 是文件路径，则删除该文件
+     * 如果 storePath 是目录路径，则删除该目录下的所有文件
+     * @param storePath 相对路径
+     */
+    public static void deleteFileOrPath(String storePath){
+        File fileOrDir = new File(PathUtil.getImageBasePath() + storePath);
+        if(fileOrDir.exists()){
+            if (fileOrDir.isDirectory()){
+                File[] files = fileOrDir.listFiles();
+                for(File file : files)
+                    file.delete();
+            }
+            fileOrDir.delete();
+        }
+    }
+
+    /**
      * 创建目标路径所涉及到的目录，
      * 如 /home/schoolShop/image/xxx.jpg，则home、schoolShop、image这三个目录都会自动创建
      * @param targetAddr 目标地址，此处为相对地址

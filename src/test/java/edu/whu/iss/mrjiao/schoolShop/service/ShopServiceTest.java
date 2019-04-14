@@ -11,10 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -52,5 +49,15 @@ public class ShopServiceTest extends BaseTest {
         ShopExecution shopExecution = shopService.addShop(shop, inputStream, shopImg.getName());
 
         assertEquals(ShopStateEnum.CHECK.getState(), shopExecution.getState());
+    }
+
+    @Test
+    public void testModifyShop() throws IOException{
+        Shop shop = new Shop();
+        shop.setShopId(7l);
+        shop.setShopName("修改后的名称");
+        File shopImg = new File("/Users/mrjiao/IdeaProjects/schoolShop/src/main/resources/16123.jpg");
+        InputStream inputStream = new FileInputStream(shopImg);
+        ShopExecution shopExecution = shopService.modifyShop(shop, inputStream, shopImg.getName());
     }
 }

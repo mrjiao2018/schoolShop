@@ -8,5 +8,28 @@ import java.io.InputStream;
 
 
 public interface ShopService {
+    /**
+     * 添加店铺功能，包括处理图片
+     * @param shop
+     * @param shopImgInputStream
+     * @param fileName
+     * @return
+     */
     ShopExecution addShop(Shop shop, InputStream shopImgInputStream, String fileName);
+
+    /**
+     * 通过店铺id获取店铺信息
+     * @param shopId
+     * @return
+     */
+    Shop getByShopId(long shopId);
+
+    /**
+     * 更新店铺信息，包括对图片的处理
+     * @param shop
+     * @param shopImgInputStream
+     * @param fileName
+     * @return
+     */
+    ShopExecution modifyShop(Shop shop, InputStream shopImgInputStream, String fileName);
 }
