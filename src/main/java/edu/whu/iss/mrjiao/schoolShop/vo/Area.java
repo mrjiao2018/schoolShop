@@ -25,11 +25,11 @@ public class Area {
         this.areaId = areaId;
     }
 
-    public String getName() {
+    public String getAreaName() {
         return areaName;
     }
 
-    public void setName(String areaName) {
+    public void setAreaName(String areaName) {
         this.areaName = areaName;
     }
 

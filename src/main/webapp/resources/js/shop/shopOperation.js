@@ -28,10 +28,9 @@ $(function () {
                     tempCategoryHtml += '<option data-id="' + item.shopCategoryId
                         + '">' + item.shopCategoryName + '</option>'
                 });
-                // TODO 为什么使用@ResponseBody序列化成字符串时，key的名称"areaName"变成了"name"？很有可能粗心导致
                 data.areaList.map(function (item, index) {
                     tempAreaHtml += '<option data-id="' + item.areaId + '">'
-                        + item.name + '</option>';
+                        + item.areaName + '</option>';
                 });
                 $("#shop-category").html(tempCategoryHtml);
                 $("#area").html(tempAreaHtml);
