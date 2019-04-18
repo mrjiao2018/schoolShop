@@ -44,6 +44,36 @@ public class ShopManagementCtrl {
     @Autowired
     private AreaService areaService;
 
+    /**
+     * 管理session相关的对shop的操作
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getshopmanagementinfo", method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, Object> getShopManagementInfo(HttpServletRequest request){
+        Map<String, Object> modelMap = new HashMap<>();
+        long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        // shopId 不存在的情况，主要用来处理用户不经过登录就直接进入管理界面，从而违规操作
+        if(shopId <= 0){
+            Object currentShopObj = request.getSession().getAttribute("currentShop");
+            if (currentShopObj == null){
+                modelMap.put("redirect", true);
+                modelMap.put("url", "/schoolshop/shopadmin/shoplist");
+            } else {
+                Shop currentShop = (Shop)currentShopObj;
+                modelMap.put("redirect", false);
+                modelMap.put("shopId", currentShop.getShopId());
+            }
+        } else {
+            Shop currentShop = new Shop();
+            currentShop.setShopId(shopId);
+            request.getSession().setAttribute("currentShop", currentShop);
+            modelMap.put("redirect", false);
+        }
+        return modelMap;
+    }
+
     @RequestMapping(value = "/getshoplist", method = RequestMethod.GET)
     @ResponseBody
     private Map<String, Object> getShopList(HttpServletRequest request){
@@ -51,6 +81,7 @@ public class ShopManagementCtrl {
         // todo 在登录功能部分设置好session中的user信息
         PersonInfo user = new PersonInfo();
         user.setUserId(1l);
+        user.setName("mrjiao");
         request.getSession().setAttribute("user", user);
         user = (PersonInfo) request.getSession().getAttribute("user");
 

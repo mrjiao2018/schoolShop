@@ -15,4 +15,10 @@ public class ShopAdminCtrl {
     public String shopOperation(){
         return "shop/shopoperation";
     }
+
+    @RequestMapping(value = "/shoplist")
+    public String shopList(){ return "shop/shoplist"; }
+
+    @RequestMapping(value = "/shopmanagement")
+    public String shopManagement(){ return "shop/shopmanage"; }
 }
