@@ -60,4 +60,13 @@ public class ShopServiceTest extends BaseTest {
         InputStream inputStream = new FileInputStream(shopImg);
         ShopExecution shopExecution = shopService.modifyShop(shop, inputStream, shopImg.getName());
     }
+
+    @Test
+    public void testGetShopList(){
+        Shop shopCondition = new Shop();
+        ShopCategory shopCategory = new ShopCategory();
+        shopCategory.setShopCategoryId(2l);
+        shopCondition.setShopCategory(shopCategory);
+        ShopExecution se = shopService.getShopList(shopCondition, 2, 2);
+    }
 }

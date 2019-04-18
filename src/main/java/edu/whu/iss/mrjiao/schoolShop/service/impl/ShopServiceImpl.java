@@ -5,6 +5,7 @@ import edu.whu.iss.mrjiao.schoolShop.dto.ShopExecution;
 import edu.whu.iss.mrjiao.schoolShop.enums.ShopStateEnum;
 import edu.whu.iss.mrjiao.schoolShop.service.ShopService;
 import edu.whu.iss.mrjiao.schoolShop.utils.ImageUtil;
+import edu.whu.iss.mrjiao.schoolShop.utils.PageCalculator;
 import edu.whu.iss.mrjiao.schoolShop.utils.PathUtil;
 import edu.whu.iss.mrjiao.schoolShop.vo.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ShopServiceImpl implements ShopService {
@@ -105,6 +107,20 @@ public class ShopServiceImpl implements ShopService {
         }
     }
 
+    @Override
+    public ShopExecution getShopList(Shop shopCondition, int pageIndex, int pageSize) {
+        int rowIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+        List<Shop> shopList = shopDao.queryShopList(shopCondition, rowIndex, pageSize);
+        int count = shopDao.queryShopCount(shopCondition);
+        ShopExecution shopExecution = new ShopExecution();
+        if(shopList != null){
+            shopExecution.setShopList(shopList);
+            shopExecution.setCount(count);
+        }else {
+            shopExecution.setState(ShopStateEnum.INNER_ERROR.getState());
+        }
+        return shopExecution;
+    }
 
     /**
      * 将用户上传的店铺图片加上水印后存储在本地，并初始化shop对象中的shop_img属性值
