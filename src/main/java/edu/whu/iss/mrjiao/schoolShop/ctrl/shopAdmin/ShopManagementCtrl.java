@@ -44,6 +44,32 @@ public class ShopManagementCtrl {
     @Autowired
     private AreaService areaService;
 
+    @RequestMapping(value = "/getshoplist", method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, Object> getShopList(HttpServletRequest request){
+        Map<String, Object> modelMap = new HashMap<>();
+        // todo 在登录功能部分设置好session中的user信息
+        PersonInfo user = new PersonInfo();
+        user.setUserId(1l);
+        request.getSession().setAttribute("user", user);
+        user = (PersonInfo) request.getSession().getAttribute("user");
+
+        try {
+            Shop shopCondition = new Shop();
+            shopCondition.setOwner(user);
+            ShopExecution shopExecution = shopService.getShopList(shopCondition, 1, 100);
+            modelMap.put("success", true);
+            modelMap.put("shopList", shopExecution.getShopList());
+            modelMap.put("user", user);
+        } catch (Exception e){
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+        }
+
+        return modelMap;
+    }
+
+
     @RequestMapping(value = "/getshopbyid", method = RequestMethod.GET)
     @ResponseBody
     private Map<String, Object> getShopById(HttpServletRequest request){
