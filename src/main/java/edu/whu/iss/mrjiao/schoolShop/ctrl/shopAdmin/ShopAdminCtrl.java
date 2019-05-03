@@ -13,6 +13,7 @@ public class ShopAdminCtrl {
 
     @RequestMapping(value = "/shopoperation")
     public String shopOperation(){
+        // 返回至 WEB-INF 目录下的 html 界面，该部分界面外部不可以直接访问
         return "shop/shopoperation";
     }
 
